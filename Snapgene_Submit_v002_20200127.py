@@ -6,45 +6,32 @@ Created on Tue Oct 22 18:46:41 2019
 """
 #converter api help http://synbiodex.github.io/SBOL-Validator/?javascript#introduction
 
-import requests
+import requests, tempfile, os
 
 def DNA_to_GeneBank(filename, partname):    
     newfile_url = "http://song.ece.utah.edu/examples/pages/acceptNewFile.php"
-    
+   
+    temp = tempfile.NamedTemporaryFile(suffix=".dna")
+    get_url = "http://song.ece.utah.edu/dnafiles/" + os.path.basename(temp.name)[:-4]
+    partfile = requests.get(filename).content
 
-#    #find partname
-#    a = filename.find('.')
-#    b = filename.rfind('\\')
-#    
-#    if b<0:
-#        b = 0
-#    partname = filename[b+1:a]
-    
-    get_url = "http://song.ece.utah.edu/dnafiles/"+partname
-    
-    #linearity and detectFeatures works on presence so set those parameters
-    data = {}
-    
-    #file to open
-    partfile = requests.get(filename).text
+    temp.write(partfile)
+    temp.flush()
+    temp.seek(0)
 
-#    partfile = open(filename ,"rb")
-    files = {'fileToUpload': partfile}
-    
-    #parameters
-    params = {} 
+    files = {'fileToUpload': temp}
     
     #upload file
-    requests.post(newfile_url, files=files, data = data, params = params,
+    res = requests.post(newfile_url, files=files,
                       headers = {"Accept":"text/plain"})
-    #close file
-    partfile.close()
+    print(res)
+    temp.close()
+
     
     #request genebank
     s = requests.get(f"{get_url}.gb")
     genebank = s.text
-    
-    
+
     request = { 'options': {'language' : 'SBOL2',
                             'test_equality': False,
                             'check_uri_compliance': False,
@@ -62,17 +49,9 @@ def DNA_to_GeneBank(filename, partname):
     
     resp = requests.post("https://validator.sbolstandard.org/validate/", json=request)
 
-    content = resp.text
-    start = content.find("result")
-    content2 = content[start+9:]
-    end = content2.rfind(">")
-    content2 = content2[:end+1]
-    content2 = content2.replace("\\n", "\n")
-    
-    with open(filename[:-4]+"_SBOL.rdf", 'w') as f:
-        f.write(content2)
-
-    return(content2)
+   
+    content = resp.json()
+    return content["result"]
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #FLASK_APP=app.py flask run
@@ -86,7 +65,7 @@ def imdoingfine():
     return("Not dead Jet")
 
 
-@app.route("/dnasubmit/evaluate")
+@app.route("/dnasubmit/evaluate", methods=["POST"])
 def evaluate():
     return("Accepting Everything")   
 
@@ -94,15 +73,16 @@ def evaluate():
 @app.route("/dnasubmit/run", methods=["POST"])
 def wrapper():
     data = request.json
-    for file in data:
+    files = data['manifest']['files']
+
+    for file in files:
         try:
-            #instance = "synbiohub.org"
             url = file['url']
-            partname = file['name']
-            print(url)
+            partname = file['filename']
             sbolcontent = DNA_to_GeneBank(url, partname)
             return sbolcontent
         except Exception as e:
             print(e)
             abort(404)
 
+app.run(debug=True)
