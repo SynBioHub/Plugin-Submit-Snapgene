@@ -84,5 +84,3 @@ def wrapper():
         except Exception as e:
             print(e)
             abort(404)
-
-app.run(debug=True)
