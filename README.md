@@ -1,6 +1,6 @@
 # INSTALL
 ## Docker
-Run `docker run --publish 8080:5000 --detach --name synbiohub/snapgene-submit-plugin:snapshot` Check it is up using localhost:8080/dnasubmit/status
+Run `docker run --publish 8080:5000 --detach --name plug synbiohub/snapgene-submit-plugin:snapshot` Check it is up using localhost:8080/dnasubmit/status
 
 ## Python
 Using python run `pip install -r requirements.txt` to install the requirements.
