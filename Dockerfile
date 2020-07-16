@@ -14,6 +14,6 @@ EXPOSE 5000
 
 RUN pip3 install -r requirements.txt
 
-ENV FLASK_APP=Snapgene_Submit_v002_20200127.py
+ENV FLASK_APP=app.py
 
 CMD ["waitress-serve", "--port=5000", "app:app"]

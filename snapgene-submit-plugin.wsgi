@@ -1,1 +1,0 @@
-from Snapgene_Submit_v002_20200127 import app as application
