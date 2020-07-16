@@ -95,7 +95,6 @@ def wrapper():
         
             ########## REPLACE THIS SECTION WITH OWN RUN CODE #################
             sbolcontent = DNA_to_GenBank(file_url, file_name)
-            return sbolcontent
             ################## END SECTION ####################################
             
             #write out result to "To_zip" file
