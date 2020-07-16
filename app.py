@@ -107,7 +107,7 @@ def wrapper():
             
         except Exception as e:
             print(e)
-            abort(415)
+            abort(400)
             
     #create manifest file
     file_path_out = os.path.join(zip_path_in, "manifest.json")
