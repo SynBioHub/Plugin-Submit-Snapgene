@@ -4,7 +4,7 @@ Created on Tue Oct 22 18:46:41 2019
 
 @author: JVM
 """
-import requests, tempfile, os
+import request, tempfile, os
 #converter api help http://synbiodex.github.io/SBOL-Validator/?javascript#introduction
 
 def DNA_to_GenBank(filename, partname):    
@@ -12,7 +12,7 @@ def DNA_to_GenBank(filename, partname):
    
     temp = tempfile.NamedTemporaryFile(suffix=".dna")
     get_url = "http://song.ece.utah.edu/dnafiles/" + os.path.basename(temp.name)[:-4]
-    partfile = requests.get(filename).content
+    partfile = request.get(filename).content
 
     temp.write(partfile)
     temp.flush()
@@ -21,14 +21,14 @@ def DNA_to_GenBank(filename, partname):
     files = {'fileToUpload': temp}
     
     #upload file
-    res = requests.post(newfile_url, files=files,
+    res = request.post(newfile_url, files=files,
                       headers = {"Accept":"text/plain"})
     #print(res)
     temp.close()
 
     
     #request genebank
-    s = requests.get(f"{get_url}.gb")
+    s = request.get(f"{get_url}.gb")
     genebank = s.text
 
     request = { 'options': {'language' : 'SBOL2',
@@ -46,7 +46,7 @@ def DNA_to_GenBank(filename, partname):
                 'main_file': genebank
               }
     
-    resp = requests.post("https://validator.sbolstandard.org/validate/", json=request)
+    resp = request.post("https://validator.sbolstandard.org/validate/", json=request)
 
    
     content = resp.json()
