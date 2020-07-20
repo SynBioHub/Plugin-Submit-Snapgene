@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 #flask run --host=0.0.0.0
 @app.route("/status")
-def imdoingfine():
+def status():
     return("The Snapgene Submit Plugin is up and running")
 
 
@@ -36,7 +36,7 @@ def evaluate():
         file_type = file_name.split('.')[-1]
         
         #types that can be converted to sbol by this plugin
-        acceptable_types = {'.dna'}
+        acceptable_types = {'dna'}
         
         #types that are useful (will be served to the run endpoint too but noted that they won't be converted)
         useful_types = {}
@@ -60,7 +60,7 @@ def evaluate():
 
 
 @app.route("/run", methods=["POST"])
-def wrapper():
+def run():
     cwd = os.getcwd()
     
     zip_path_in = os.path.join(cwd, "To_zip")
