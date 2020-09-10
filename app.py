@@ -7,7 +7,7 @@ Created on Tue Oct 22 18:46:41 2019
 #FLASK_APP=app.py flask run
 from flask import Flask, request, abort, jsonify, send_file
 from DNA_to_GenBank import DNA_to_GenBank
-import os, shutil
+import os, shutil, tempfile
 app = Flask(__name__)
 
 #flask run --host=0.0.0.0
