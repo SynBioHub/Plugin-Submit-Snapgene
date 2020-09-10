@@ -72,9 +72,6 @@ def run():
     run_manifest = request.get_json(force=True)
     files = run_manifest['manifest']['files']
     
-    #Read in template to compare to
-    template_path = os.path.join(cwd, "templates", "darpa_template_blank.xlsx")
-    
     #initiate response manifest
     run_response_manifest = {"results":[]}
     
