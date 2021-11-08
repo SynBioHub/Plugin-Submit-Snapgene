@@ -1,8 +1,2 @@
-Click==7.0
-Flask==1.0.2
-itsdangerous==1.1.0
-Jinja2==2.11
-MarkupSafe==1.1.1
-Werkzeug==0.16.1
-waitress==1.4.4
+Flask==2.0.1
 requests==2.22.0
